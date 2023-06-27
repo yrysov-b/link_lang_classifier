@@ -3,3 +3,12 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+@layer components {
+    .anim {
+        @apply ease-in-out duration-500 transform;
+    }
+
+    .choice-button {
+        @apply p-28 anim bg-blue-900 hover:shadow-2xl shadow-blue-500 hover:bg-blue-800 hover:ring active:bg-blue-700 active:scale-95 ring-cyan-600 text-gray-50 rounded-xl shadow-md hover:scale-[98%];
+    }
+}

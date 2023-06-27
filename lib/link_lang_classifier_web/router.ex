@@ -70,6 +70,7 @@ defmodule LinkLangClassifierWeb.Router do
       live "/links/:id", LinkLive.Show, :show
       live "/links/:id/show/edit", LinkLive.Show, :edit
 
+      live "/", ClassifierLive.Index
     end
   end
 
