@@ -62,6 +62,14 @@ defmodule LinkLangClassifierWeb.Router do
       on_mount: [{LinkLangClassifierWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/links", LinkLive.Index, :index
+      live "/links/new", LinkLive.Index, :new
+      live "/links/:id/edit", LinkLive.Index, :edit
+
+      live "/links/:id", LinkLive.Show, :show
+      live "/links/:id/show/edit", LinkLive.Show, :edit
+
     end
   end
 
