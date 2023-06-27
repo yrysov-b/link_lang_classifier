@@ -35,3 +35,4 @@ link_lang_classifier-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.vscode
