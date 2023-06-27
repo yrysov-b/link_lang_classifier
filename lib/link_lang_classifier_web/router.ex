@@ -17,12 +17,6 @@ defmodule LinkLangClassifierWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", LinkLangClassifierWeb do
-    pipe_through :browser
-
-    get "/", PageController, :home
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", LinkLangClassifierWeb do
   #   pipe_through :api
