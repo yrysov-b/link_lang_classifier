@@ -17,9 +17,30 @@
       </div>
     </a>
     <div class="flex mx-auto space-x-32">
-      <button class="choice-button">Russian</button>
-      <button class="choice-button">Kyrgyz</button>
-      <button class="choice-button">Other</button>
+      <button
+        phx-click="btn-event"
+        phx-value-lang="ru"
+        phx-value-id={@link.id}
+        class="choice-button"
+      >
+        Russian
+      </button>
+      <button
+        phx-click="btn-event"
+        phx-value-lang="kg"
+        phx-value-id={@link.id}
+        class="choice-button"
+      >
+        Kyrgyz
+      </button>
+      <button
+        phx-click="btn-event"
+        phx-value-lang="other"
+        phx-value-id={@link.id}
+        class="choice-button"
+      >
+        Other
+      </button>
     </div>
   </div>
 </div>

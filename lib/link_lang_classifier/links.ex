@@ -108,4 +108,9 @@ defmodule LinkLangClassifier.Links do
     |> first()
     |> Repo.one()
   end
+
+  def classify(id, lang) do
+    get_link!(id)
+    |> update_link(%{"category" => lang})
+  end
 end
