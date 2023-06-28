@@ -2,7 +2,7 @@ import Config
 
 # Configure your database
 config :link_lang_classifier, LinkLangClassifier.Repo,
-  username: "postgres",
+  username: "hello_user",
   password: "postgres",
   hostname: "localhost",
   database: "link_lang_classifier_dev",

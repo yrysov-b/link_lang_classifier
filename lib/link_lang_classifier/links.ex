@@ -101,4 +101,11 @@ defmodule LinkLangClassifier.Links do
   def change_link(%Link{} = link, attrs \\ %{}) do
     Link.changeset(link, attrs)
   end
+
+  def get_next_unclassified() do
+    Link
+    |> where([l], is_nil(l.category))
+    |> first()
+    |> Repo.one()
+  end
 end

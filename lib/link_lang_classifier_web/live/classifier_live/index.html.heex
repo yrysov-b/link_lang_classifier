@@ -1,22 +1,25 @@
 <div class="min-h-screen bg-slate-100 flex">
-  <div class="mx-72 px-10 py-8 min-h-max flex-1 flex flex-col space-y-8">
-    <a 
-    class="bg-slate-50 flex shadow hover:shadow-xl hover:ring-1 anim hover:scale-[101%] ring-slate-400 space-x-4 border rounded-md px-8 mx-auto py-7" 
-    href="https://www.youtube.com/watch?v=UnNQYghc8uU">
-        <div>
-            <iframe class="rounded w-[40rem] h-[22.5rem]" src="https://www.youtube.com/embed/UnNQYghc8uU" frameborder="0"></iframe>
-        </div>
-        <div class="flex flex-col space-y-4">
-            <h2 class="text-2xl font-bold text-slate-800">Internal Developer Platform (IDP) For Infrastructure</h2>
-            <p class="text-slate-700">
-                What do we need to do to enable everyone to self-serve themselves when infrastructure is concerned? How can we create, operate, and destroy Kubernetes cluste...
-            </p>
-        </div>
+  <div class="2xl:mx-72 px-10 py-8 min-h-max flex-1 flex flex-col space-y-8">
+    <a
+      class="bg-slate-50 flex shadow hover:shadow-xl hover:ring-1 anim hover:scale-[101%] ring-slate-400 space-x-4 border rounded-md px-8 mx-auto py-7"
+      href={@link.url}
+    >
+      <div>
+        <iframe class="rounded w-[40rem] h-[22.5rem]" src={@link.video} frameborder="0"></iframe>
+      </div>
+      <div class="flex flex-col space-y-4">
+        <h2 class="text-2xl font-bold text-slate-800">
+          <%= @link.title %>
+        </h2>
+        <p class="text-slate-700">
+          <%= @link.desc %>
+        </p>
+      </div>
     </a>
     <div class="flex mx-auto space-x-32">
-        <button class="choice-button">Russian</button>
-        <button class="choice-button">Kyrgyz</button>
-        <button class="choice-button">Other</button>
+      <button class="choice-button">Russian</button>
+      <button class="choice-button">Kyrgyz</button>
+      <button class="choice-button">Other</button>
     </div>
-  </div> 
+  </div>
 </div>
