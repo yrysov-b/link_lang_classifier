@@ -1,11 +1,17 @@
 <div class="min-h-screen bg-slate-100 flex">
   <div class="2xl:mx-72 px-10 py-8 min-h-max flex-1 flex flex-col space-y-8">
+    <%= if @link == nil do %>
+      <h1 class="text-6xl mx-auto text-slate-800 font-bold"> You are done</h1>
+      <p class="mt-8 text-gray-600 mx-auto">No work for you for now</p>
+    <% end %>
+    <%= if @link != nil do %>
     <a
       class="bg-slate-50 flex shadow hover:shadow-xl hover:ring-1 anim hover:scale-[101%] ring-slate-400 space-x-4 border rounded-md px-8 mx-auto py-7"
       href={@link.url}
+      target="_blank"
     >
       <div>
-        <iframe class="rounded w-[40rem] h-[22.5rem]" src={@link.video} frameborder="0"></iframe>
+        <iframe allow="fullscreen;" class="rounded w-[40rem] h-[22.5rem]" src={@link.video} frameborder="0"></iframe>
       </div>
       <div class="flex flex-col space-y-4">
         <h2 class="text-2xl font-bold text-slate-800">
@@ -42,5 +48,6 @@
         Other
       </button>
     </div>
+     <% end %>
   </div>
 </div>
