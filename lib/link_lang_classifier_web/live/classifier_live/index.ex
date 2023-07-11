@@ -4,8 +4,9 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    langs = %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
     result = get_next_link() |> IO.inspect
-    {:ok, assign(socket, link: result), layout: false}
+    {:ok, assign(socket, langs: langs, link: result), layout: false}
   end
 
   @spec get_next_link :: nil
@@ -35,20 +36,53 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     [{"content", val} | _] = tl list
     case p_name do
       "og:title" -> Map.put(acc, :title, val)
-      "og:description" -> Map.put(acc, :desc, val)
+     # "og:description" -> Map.put(acc, :desc, val)
       "og:video:url" -> Map.put(acc, :video, val)
       _ -> acc
     end
   end
 
   @impl true
-  def handle_event("btn-event", %{"lang" => lang, "id"=> id}, socket) do
+  def handle_event("submit-event", %{"id"=> id}, socket) do
     {id, _} = Integer.parse(id)
-    id
-    |> LinkLangClassifier.Links.classify(lang)
 
-    result = get_next_link()
+    langs = socket.assigns.langs
+    res = langs
+    |> Enum.filter(fn({lang, %{is_checked: checked_value}}) ->
+      checked_value
+    end)
+    |> Enum.map(fn({x, _})-> x end)
+    |> Enum.sort()
+    |> Enum.join("/")
 
-    {:ok, assign(socket, link: result)}
+    case res do
+      "" ->
+        socket = put_flash(socket, :error, "Language is not choosen")
+        {:noreply, socket}
+      lang ->
+        id
+        |> LinkLangClassifier.Links.classify(res)
+
+        result = get_next_link()
+        socket = put_flash(socket, :info, "Classified successfully.")
+        {:noreply, assign(socket, link: result)}
+    end
+  end
+
+  @impl true
+  def handle_event("btn-event", %{"lang" => lang}, socket) do
+    langs = socket.assigns.langs
+    params = Map.get(langs, lang)
+
+    value_checked = Map.get(params, :is_checked)
+    IO.inspect(value_checked)
+
+    new_params = Map.put(params, :is_checked, !value_checked)
+    IO.inspect(new_params)
+
+    new_langs = Map.put(langs, lang, new_params)
+
+    IO.inspect(new_langs)
+    {:noreply, assign(socket, langs: new_langs)}
   end
 end

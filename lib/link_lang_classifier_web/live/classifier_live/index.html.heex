@@ -1,53 +1,59 @@
 <div class="min-h-screen bg-slate-100 flex">
   <div class="2xl:mx-72 px-10 py-8 min-h-max flex-1 flex flex-col space-y-8">
     <%= if @link == nil do %>
-      <h1 class="text-6xl mx-auto text-slate-800 font-bold"> You are done</h1>
+      <h1 class="text-6xl mx-auto text-slate-800 font-bold">You are done</h1>
       <p class="mt-8 text-gray-600 mx-auto">No work for you for now</p>
     <% end %>
     <%= if @link != nil do %>
-    <a
-      class="bg-slate-50 flex shadow hover:shadow-xl hover:ring-1 anim hover:scale-[101%] ring-slate-400 space-x-4 border rounded-md px-8 mx-auto py-7"
-      href={@link.url}
-      target="_blank"
-    >
-      <div>
-        <iframe allow="fullscreen;" class="rounded w-[40rem] h-[22.5rem]" src={@link.video} frameborder="0"></iframe>
+      <a
+        class="bg-slate-50 flex shadow hover:shadow-xl hover:ring-1 anim hover:scale-[101%] ring-slate-400 space-x-4 border rounded-md px-8 mx-auto py-7"
+        href={@link.url}
+        target="_blank"
+      >
+        <div>
+          <iframe
+            allow="fullscreen;"
+            class="rounded w-[40rem] h-[22.5rem]"
+            src={@link.video}
+            frameborder="0"
+          >
+          </iframe>
+        </div>
+        <div class="flex flex-col space-y-4">
+          <h2 class="text-2xl font-bold text-slate-800">
+            <%!-- <%= @link.title %> --%>
+          </h2>
+          <p class="text-slate-700">
+            <%!-- <%= @link.desc %> --%>
+          </p>
+        </div>
+      </a>
+      <div class="flex mx-auto space-x-32">
+        <%= for {key, value} <- @langs do %>
+          <button
+            phx-click="btn-event"
+            phx-value-lang={key}
+            class={
+              case value.is_checked do
+                false ->
+                  "choice-button"
+
+                true ->
+                  "choice-button ring-green-300 shadow-green-200 hover:shadow-green-200 bg-green-600 hover:bg-green-700"
+              end
+            }
+          >
+            <%= value.name %>
+          </button>
+        <% end %>
       </div>
-      <div class="flex flex-col space-y-4">
-        <h2 class="text-2xl font-bold text-slate-800">
-          <%= @link.title %>
-        </h2>
-        <p class="text-slate-700">
-          <%= @link.desc %>
-        </p>
-      </div>
-    </a>
-    <div class="flex mx-auto space-x-32">
       <button
-        phx-click="btn-event"
-        phx-value-lang="ru"
+        phx-click="submit-event"
         phx-value-id={@link.id}
-        class="choice-button"
+        class="bg-green-700 rounded-xl mx-auto px-32 text-lg shadow-lg shadow-green-200 active:scale-95 hover:shadow-green-200 hover:shadow-xl py-2 text-white ring-green-700 hover:ring hover:bg-green-600 hover:scale-[98%] anim"
       >
-        Russian
+        Submit
       </button>
-      <button
-        phx-click="btn-event"
-        phx-value-lang="kg"
-        phx-value-id={@link.id}
-        class="choice-button"
-      >
-        Kyrgyz
-      </button>
-      <button
-        phx-click="btn-event"
-        phx-value-lang="other"
-        phx-value-id={@link.id}
-        class="choice-button"
-      >
-        Other
-      </button>
-    </div>
-     <% end %>
+    <% end %>
   </div>
 </div>
