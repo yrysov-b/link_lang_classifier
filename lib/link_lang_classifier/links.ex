@@ -91,15 +91,6 @@ defmodule LinkLangClassifier.Links do
 
 
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking link changes.
-
-  ## Examples
-
-      iex> change_link(link)
-      %Ecto.Changeset{data: %Link{}}
-
-  """
   def change_link(%Link{} = link, attrs \\ %{}) do
     Link.changeset(link, attrs)
   end

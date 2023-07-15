@@ -1,5 +1,6 @@
 <div class="min-h-screen bg-slate-100 flex">
   <div class="2xl:mx-72 px-10 py-8 min-h-max flex-1 flex flex-col space-y-8">
+    <.flash_group flash={@flash} />
     <%= if @link == nil do %>
       <h1 class="text-6xl mx-auto text-slate-800 font-bold">You are done</h1>
       <p class="mt-8 text-gray-600 mx-auto">No work for you for now</p>
@@ -34,13 +35,10 @@
             phx-click="btn-event"
             phx-value-lang={key}
             class={
-              case value.is_checked do
-                false ->
-                  "choice-button"
-
-                true ->
-                  "choice-button ring-green-300 shadow-green-200 hover:shadow-green-200 bg-green-600 hover:bg-green-700"
-              end
+             [
+              "choice-button",
+              value.is_checked && "ring-green-300 shadow-green-200 hover:shadow-green-200 bg-green-600 hover:bg-green-700"
+             ]
             }
           >
             <%= value.name %>

@@ -5,7 +5,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     langs = %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
-    result = get_next_link() |> IO.inspect
+    result = get_next_link()
     {:ok, assign(socket, langs: langs, link: result), layout: false}
   end
 
@@ -48,7 +48,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
 
     langs = socket.assigns.langs
     res = langs
-    |> Enum.filter(fn({lang, %{is_checked: checked_value}}) ->
+    |> Enum.filter(fn({_, %{is_checked: checked_value}}) ->
       checked_value
     end)
     |> Enum.map(fn({x, _})-> x end)
@@ -58,11 +58,10 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     user_id = socket.assigns.current_user.id
     case res do
       "" ->
-        socket = put_flash(socket, :error, "Language is not choosen")
-        {:noreply, socket}
+        {:noreply,  put_flash(socket, :error, "Language is not choosen")}
       lang ->
         id
-        |> LinkLangClassifier.Links.classify(res, user_id)
+        |> LinkLangClassifier.Links.classify(lang, user_id)
 
         result = get_next_link()
         socket = put_flash(socket, :info, "Classified successfully.")
