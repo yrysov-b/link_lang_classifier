@@ -55,13 +55,14 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     |> Enum.sort()
     |> Enum.join("/")
 
+    user_id = socket.assigns.current_user.id
     case res do
       "" ->
         socket = put_flash(socket, :error, "Language is not choosen")
         {:noreply, socket}
       lang ->
         id
-        |> LinkLangClassifier.Links.classify(res)
+        |> LinkLangClassifier.Links.classify(res, user_id)
 
         result = get_next_link()
         socket = put_flash(socket, :info, "Classified successfully.")

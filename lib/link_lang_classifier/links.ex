@@ -89,6 +89,8 @@ defmodule LinkLangClassifier.Links do
     Repo.delete(link)
   end
 
+
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking link changes.
 
@@ -109,8 +111,8 @@ defmodule LinkLangClassifier.Links do
     |> Repo.one()
   end
 
-  def classify(id, lang) do
+  def classify(id, lang, user_id) do
     get_link!(id)
-    |> update_link(%{"category" => lang})
+    |> update_link(%{"category" => lang, "classified_by" => user_id})
   end
 end
