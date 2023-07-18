@@ -2,17 +2,20 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   use LinkLangClassifierWeb, :live_view
   alias LinkLangClassifier.Finch, as: MyFinch
 
+  @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
+
+
   @impl true
   def mount(_params, _session, socket) do
-    langs = %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
-    result = get_next_link()
+    langs = @default_map
+    user_id = socket.assigns.current_user.id
+    result = get_next_link(user_id)
     {:ok, assign(socket, langs: langs, link: result), layout: false}
   end
 
-  @spec get_next_link :: nil
-  def get_next_link() do
+  def get_next_link(user_id) do
     # 1. Get next link from DB
-    with %LinkLangClassifier.Links.Link{} = link <- LinkLangClassifier.Links.get_next_unclassified() do
+    with %LinkLangClassifier.Links.Link{} = link <- LinkLangClassifier.Links.get_next_unclassified(user_id) do
       # 2. Fetch the html by url with Finch
       {:ok, %{body: html}} = Finch.build(:get, link.url)
       |> Finch.request(MyFinch)
@@ -62,10 +65,9 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
       lang ->
         id
         |> LinkLangClassifier.Links.classify(lang, user_id)
-
-        result = get_next_link()
+        result = get_next_link(user_id)
         socket = put_flash(socket, :info, "Classified successfully.")
-        {:noreply, assign(socket, link: result)}
+        {:noreply, assign(socket, link: result, langs: @default_map)}
     end
   end
 

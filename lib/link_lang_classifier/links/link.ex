@@ -3,8 +3,6 @@ defmodule LinkLangClassifier.Links.Link do
   import Ecto.Changeset
 
   schema "links" do
-    field :category, :string
-    field :classified_by, :integer
     field :url, :string
 
     timestamps()
@@ -13,7 +11,7 @@ defmodule LinkLangClassifier.Links.Link do
   @doc false
   def changeset(link, attrs) do
     link
-    |> cast(attrs, [:url, :category, :classified_by])
+    |> cast(attrs, [:url])
     |> validate_required([:url])
   end
 end

@@ -4,6 +4,7 @@ defmodule LinkLangClassifier.Links do
   """
 
   import Ecto.Query, warn: false
+  alias LinkLangClassifier.Links.Classification
   alias LinkLangClassifier.Repo
 
   alias LinkLangClassifier.Links.Link
@@ -89,21 +90,27 @@ defmodule LinkLangClassifier.Links do
     Repo.delete(link)
   end
 
-
-
   def change_link(%Link{} = link, attrs \\ %{}) do
     Link.changeset(link, attrs)
   end
 
-  def get_next_unclassified() do
+  def get_next_unclassified(user_id) do
     Link
-    |> where([l], is_nil(l.category))
+    |> join(:left, [l], c in Classification, on: c.link_id == l.id and c.classifier_id == ^user_id)
+    |> where([l, c], is_nil(c.id))
+    |> select([l,c], l)
     |> first()
     |> Repo.one()
   end
 
   def classify(id, lang, user_id) do
-    get_link!(id)
-    |> update_link(%{"category" => lang, "classified_by" => user_id})
+    %Classification{}
+    |> Classification.changeset(%{"category" => lang, "classifier_id" => user_id, "link_id"=>id})
+    |> Repo.insert()
   end
 end
+
+# from links as l
+# left join classifications as c on l.id = c.link_Id and user_id = x
+# where c.link_id is null
+# limit 1
