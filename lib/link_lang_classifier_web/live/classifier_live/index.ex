@@ -2,7 +2,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   use LinkLangClassifierWeb, :live_view
   alias LinkLangClassifier.Finch, as: MyFinch
 
-  @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
+  @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"}, "ot" => %{is_checked: false, name: "Other"}, "nt" => %{is_checked: false, name: "None"} }
   
   @impl true
   def mount(_params, _session, socket) do
