@@ -108,6 +108,34 @@ defmodule LinkLangClassifier.Links do
     |> Classification.changeset(%{"category" => lang, "classifier_id" => user_id, "link_id"=>id})
     |> Repo.insert()
   end
+
+  @doc """
+  Returns the total number of links.
+
+  ## Examples
+
+      iex> count_links()
+      100
+
+  """
+  def count_links do
+    length(Repo.all(Link))
+  end 
+
+  @doc """
+  Returns the total number of classifications.
+
+  ## Examples
+
+      iex> count_classifications(user_id)
+      70
+
+  """
+  def count_classifications(user_id) do
+    query = from c in Classification, where: c.classifier_id == ^user_id
+    length(Repo.all(query))
+  end 
+
 end
 
 # from links as l

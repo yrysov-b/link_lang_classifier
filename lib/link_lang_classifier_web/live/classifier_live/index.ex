@@ -3,14 +3,14 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   alias LinkLangClassifier.Finch, as: MyFinch
 
   @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
-
-
+  
   @impl true
   def mount(_params, _session, socket) do
     langs = @default_map
     user_id = socket.assigns.current_user.id
     result = get_next_link(user_id)
-    {:ok, assign(socket, langs: langs, link: result), layout: false}
+    count = count(user_id)
+    {:ok, assign(socket, langs: langs, count: count, link: result), layout: false}
   end
 
   def get_next_link(user_id) do
@@ -28,6 +28,12 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
       |> Enum.filter(fn [{name, _} | _] -> name == "property" end)
       |> Enum.reduce(%{id: link.id, url: link.url}, &property_reducer/2)
     end
+  end
+
+  def count(user_id) do 
+    res = (LinkLangClassifier.Links.count_classifications(user_id) / LinkLangClassifier.Links.count_links()) * 100 
+    |> Decimal.from_float()
+    |> Decimal.round(2)
   end
 
   defp parse_html(html) do
@@ -49,6 +55,9 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   def handle_event("submit-event", %{"id"=> id}, socket) do
     {id, _} = Integer.parse(id)
 
+    
+
+
     langs = socket.assigns.langs
     res = langs
     |> Enum.filter(fn({_, %{is_checked: checked_value}}) ->
@@ -59,6 +68,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     |> Enum.join("/")
 
     user_id = socket.assigns.current_user.id
+
     case res do
       "" ->
         {:noreply,  put_flash(socket, :error, "Language is not choosen")}
@@ -67,7 +77,8 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
         |> LinkLangClassifier.Links.classify(lang, user_id)
         result = get_next_link(user_id)
         socket = put_flash(socket, :info, "Classified successfully.")
-        {:noreply, assign(socket, link: result, langs: @default_map)}
+        new_count = count(user_id)
+        {:noreply, assign(socket, link: result, langs: @default_map, count: new_count)}
     end
   end
 
