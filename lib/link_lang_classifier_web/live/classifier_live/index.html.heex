@@ -38,7 +38,7 @@
           </p>
         </div>
       </a>
-      <div class="flex mx-auto space-x-32">
+      <div class="grid grid-cols-3 gap-4">
         <%= for {key, value} <- @langs do %>
           <button
             phx-click="btn-event"
@@ -53,6 +53,31 @@
             <%= value.name %>
           </button>
         <% end %>
+
+        <button
+          phx-click="other-event"
+          class={
+             [
+              "choice-button",
+              @other_isChecked && "ring-green-300 shadow-green-200 hover:shadow-green-200 bg-green-600 hover:bg-green-700"
+             ]
+            }
+        >
+          Other:
+          <input value={@text_value} name="input_value" id="other_text" phx-keyup="other-change" size="15" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+        </button>
+        <button
+          phx-click="none-btn-event"
+           class={
+             [
+              "choice-button",
+              @none_isChecked && "ring-green-300 shadow-green-200 hover:shadow-green-200 bg-green-600 hover:bg-green-700"
+             ]
+            }
+        >
+          No spoken or written language
+        </button>
+        
       </div>
       <button
         phx-click="submit-event"
