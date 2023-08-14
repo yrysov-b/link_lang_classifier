@@ -2,15 +2,16 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
   use LinkLangClassifierWeb, :live_view
   alias LinkLangClassifier.Finch, as: MyFinch
 
-  @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"} }
-  
+  @default_map %{"ru" => %{is_checked: false, name: "Russian"},"en" => %{is_checked: false, name: "English"},"kg" => %{is_checked: false, name: "Kyrgyz"}}
+
+
   @impl true
   def mount(_params, _session, socket) do
     langs = @default_map
     user_id = socket.assigns.current_user.id
     result = get_next_link(user_id)
     count = count(user_id)
-    {:ok, assign(socket, langs: langs, count: count, link: result), layout: false}
+    {:ok, assign(socket, langs: langs, count: count, link: result, text_value: "", none_isChecked: false, other_isChecked: false), layout: false}
   end
 
   def get_next_link(user_id) do
@@ -51,12 +52,29 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     end
   end
 
+  def handle_event("other-event", %{"value" => other_text}, socket) do
+    other_isChecked = not socket.assigns.other_isChecked
+    none_isChecked = if other_isChecked, do: false, else: socket.assigns.none_isChecked
+    IO.inspect(other_isChecked)
+    {:noreply, assign(socket, other_isChecked: other_isChecked, none_isChecked: none_isChecked )} 
+  end
+
+  def handle_event("none-btn-event", %{"value" => other_text}, socket) do
+    none_isChecked = not socket.assigns.none_isChecked
+    other_isChecked = if none_isChecked, do: false, else: socket.assigns.other_isChecked
+    langs = if none_isChecked, do: @default_map, else: socket.assigns.langs
+    IO.inspect(other_isChecked)
+    {:noreply, assign(socket, other_isChecked: other_isChecked, none_isChecked: none_isChecked, langs: langs )} 
+  end
+
+  def handle_event("other-change", %{"value" => msg}, socket) do
+    IO.inspect(msg)
+    {:noreply, assign(socket, text_value: msg)}
+  end
+
   @impl true
   def handle_event("submit-event", %{"id"=> id}, socket) do
     {id, _} = Integer.parse(id)
-
-    
-
 
     langs = socket.assigns.langs
     res = langs
@@ -67,6 +85,13 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     |> Enum.sort()
     |> Enum.join("/")
 
+    none_isChecked = socket.assigns.none_isChecked
+    res = if none_isChecked, do: "none", else: res
+
+    other_isChecked = socket.assigns.other_isChecked
+    res = if other_isChecked && res != "", do: res <> "|" <> socket.assigns.text_value, else: res
+    res = if other_isChecked && res == "", do: socket.assigns.text_value, else: res
+    
     user_id = socket.assigns.current_user.id
 
     case res do
@@ -78,7 +103,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
         result = get_next_link(user_id)
         socket = put_flash(socket, :info, "Classified successfully.")
         new_count = count(user_id)
-        {:noreply, assign(socket, link: result, langs: @default_map, count: new_count)}
+        {:noreply, assign(socket, link: result, langs: @default_map, none_isChecked: false, other_isChecked: false, count: new_count)}
     end
   end
 
@@ -89,6 +114,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
 
     value_checked = Map.get(params, :is_checked)
     IO.inspect(value_checked)
+    none_isChecked = if value_checked, do: socket.assigns.none_isChecked, else: false
 
     new_params = Map.put(params, :is_checked, !value_checked)
     IO.inspect(new_params)
@@ -96,6 +122,6 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
     new_langs = Map.put(langs, lang, new_params)
 
     IO.inspect(new_langs)
-    {:noreply, assign(socket, langs: new_langs)}
+    {:noreply, assign(socket, langs: new_langs, none_isChecked: none_isChecked)}
   end
 end
