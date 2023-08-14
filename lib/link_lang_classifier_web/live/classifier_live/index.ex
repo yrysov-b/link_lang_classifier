@@ -103,7 +103,7 @@ defmodule LinkLangClassifierWeb.ClassifierLive.Index do
         result = get_next_link(user_id)
         socket = put_flash(socket, :info, "Classified successfully.")
         new_count = count(user_id)
-        {:noreply, assign(socket, link: result, langs: @default_map, count: new_count)}
+        {:noreply, assign(socket, link: result, langs: @default_map, none_isChecked: false, other_isChecked: false, count: new_count)}
     end
   end
 
